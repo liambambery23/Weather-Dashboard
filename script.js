@@ -26,6 +26,7 @@ $("#searchBtn").on("click", function(event) {
         return; 
     }
     displayCurrentWeather(city);
+    fiveDay(city);
     $("#city-input").val("");
     console.log(city);
     let isDone=false;
@@ -61,7 +62,6 @@ function saveSearch() {
 
     //onclick for usercity needs to be here due to scoping issues
     $(".usercity").on("click", function() {
-        console.log($(this).text());
         displayCurrentWeather($(this).text());
     })
     //grab city
@@ -95,8 +95,8 @@ $.ajax({
 
 
 .then(function(response) {
-    console.log(currentWeatherURL);
-    console.log(response);
+    // console.log(currentWeatherURL);
+    // console.log(response);
     $(".city").html("<h2>" + response.name + " (" + (currentDate) + ")" + "</h2>");
     let windMPH = (response.wind.speed) * 2.237;
     $(".wind").text("Wind Speed: " + windMPH.toFixed(1) + " MPH");
@@ -106,8 +106,8 @@ $.ajax({
     //uv: lon and lat
     let lon= response.coord.lon;
     let lat= response.coord.lat;
-    console.log(lon);
-    console.log(lat)
+    // console.log(lon);
+    // console.log(lat)
 
     var uvURL="http://api.openweathermap.org/data/2.5/uvi?lat="+lat+"&lon="+lon+"&appid="+APIKey;
     console.log(uvURL)
@@ -116,9 +116,22 @@ $.ajax({
         url: uvURL,
         method: "GET"
     }).then(function(uvObj){
-        console.log(uvObj.value)
-        $(".uv").text("UV Index: " + uvObj.value)
-    })
+        console.log(uvObj.value);
+        $(".uv").text(uvObj.value);
+        if (uvObj.value <= 2 ) {
+            $(".uv").attr("class", "favorable");
+            $(".uv").removeAttr("class", "moderate");
+            $(".uv").removeAttr("class", "high");
+        } else if (uvObj.value <= 5 ) {
+            $(".uv").attr("class", "moderate");
+            $(".uv").removeAttr("class", "favorable");
+            $(".uv").removeAttr("class", "high");
+        } else if (uvObj.value > 5 ) {
+            $(".uv").attr("class", "high");
+            $(".uv").removeAttr("class", "moderate");
+            $(".uv").removeAttr("class", "favorable");
+        }
+    });
     
 
 })
@@ -126,10 +139,23 @@ $.ajax({
 
 function fiveDay(city) {
     console.log(city);
-    //5days run every 3 hr, make a for loop 5 times and mult it by 8 so each day is 34 hrs
+    //5days run every 3 hr, make a for loop 5 times and mult it by 8 so each day is 24 hrs
     //3*8=24 hours
     var fiveURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
     console.log(fiveURL);
+
+    $.ajax({
+        url: fiveURL,
+        method: "GET"
+    }) 
+    .then(function(forecast){
+        console.log(forecast);
+        for (let i=0; i<5; i++) {
+            let tempF = (forecast.list[1].main.temp - 273.15) * 1.80 + 32;
+            $("#day1").text("Temperature (F): " + tempF.toFixed(2));
+
+        }
+    })
 
 
 
