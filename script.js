@@ -11,11 +11,11 @@ loadSearch();
 //if you hve data from ls use it
 if(lastCity!=null){
     displayCurrentWeather(lastCity)
-    // fiveDay(lastCity)
+    fiveDay(lastCity)
 }else{
     //else default with greenville
     displayCurrentWeather("Greenville");
-    // fiveDay("Greenville")
+    fiveDay("Greenville")
 }
 
 // on click of search button, get the value of the search and save it 
@@ -63,7 +63,7 @@ function saveSearch() {
     //onclick for usercity needs to be here due to scoping issues
     $(".usercity").on("click", function() {
         displayCurrentWeather($(this).text());
-        //fiveDay($(this).text());
+        fiveDay($(this).text());
     })
     //grab city
     //call 5days
@@ -141,9 +141,8 @@ $.ajax({
 
 
 function fiveDay(city) {
-    console.log(city);
-    //5days run every 3 hr, make a for loop 5 times and mult it by 8 so each day is 24 hrs
-    //3*8=24 hours
+    
+
     var fiveURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
     console.log(fiveURL);
 
@@ -156,6 +155,7 @@ function fiveDay(city) {
         method: "GET"
     }) 
     .then(function(forecast){
+        $(".card-row").empty();
         console.log(forecast);
         let counter = 1;
         for (let i=0; i < forecast.list.length; i++) {
@@ -169,8 +169,8 @@ function fiveDay(city) {
            
             let date = forecastObj.date;
             let trimmedDate = date.substr(0,10);
-            console.log(trimmedDate);
-
+            
+            
             // go into forecast and get data for specific day
             // once we  get the data, create new html 
             // put data into proper html element 
@@ -193,7 +193,6 @@ function fiveDay(city) {
                 humidityEl.text(forecastObj.humidity);
 
                 dayDiv.append(dateEl, tempEl, humidityEl);
-                console.log(dayDiv);
                 $(".card-row").append(dayDiv);
             }
             
