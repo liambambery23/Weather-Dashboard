@@ -11,11 +11,11 @@ loadSearch();
 //if you hve data from ls use it
 if(lastCity!=null){
     displayCurrentWeather(lastCity)
-    fiveDay(lastCity)
+    // fiveDay(lastCity)
 }else{
     //else default with greenville
     displayCurrentWeather("Greenville");
-    fiveDay("Greenville")
+    // fiveDay("Greenville")
 }
 
 // on click of search button, get the value of the search and save it 
@@ -63,6 +63,7 @@ function saveSearch() {
     //onclick for usercity needs to be here due to scoping issues
     $(".usercity").on("click", function() {
         displayCurrentWeather($(this).text());
+        //fiveDay($(this).text());
     })
     //grab city
     //call 5days
@@ -95,7 +96,7 @@ $.ajax({
 
 
 .then(function(response) {
-    // console.log(currentWeatherURL);
+    console.log(currentWeatherURL);
     // console.log(response);
     $(".city").html("<h2>" + response.name + " (" + (currentDate) + ")" + "</h2>");
     let windMPH = (response.wind.speed) * 2.237;
@@ -137,6 +138,8 @@ $.ajax({
 })
 }
 
+
+
 function fiveDay(city) {
     console.log(city);
     //5days run every 3 hr, make a for loop 5 times and mult it by 8 so each day is 24 hrs
@@ -144,18 +147,59 @@ function fiveDay(city) {
     var fiveURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
     console.log(fiveURL);
 
+    let startingDate = moment().format("YYYY-MM-DD");
+    console.log(startingDate);
+    console.log(moment().add(1, 'days').format("YYYY-MM-DD"));
+
     $.ajax({
         url: fiveURL,
         method: "GET"
     }) 
     .then(function(forecast){
         console.log(forecast);
-        for (let i=0; i<5; i++) {
-            let tempF = (forecast.list[1].main.temp - 273.15) * 1.80 + 32;
-            $("#day1").text("Temperature (F): " + tempF.toFixed(2));
+        let counter = 1;
+        for (let i=0; i < forecast.list.length; i++) {
+        
+            let forecastObj = {
+                date: forecast.list[i].dt_txt,
+                icon: forecast.list[i].weather[0].icon,
+                temp: forecast.list[i].main.temp,
+                humidity: forecast.list[i].main.humidity
+            }
+           
+            let date = forecastObj.date;
+            let trimmedDate = date.substr(0,10);
+            console.log(trimmedDate);
 
+            // go into forecast and get data for specific day
+            // once we  get the data, create new html 
+            // put data into proper html element 
+            // display/append new html to the page
+
+            // potential issues: might get more data than we need 
+            // data we get is either going to be start or end of day 
+
+            if (trimmedDate === moment().add(counter, 'days').format("YYYY-MM-DD")) {
+                i = i+8;
+                counter++;
+                let dayDiv = $("<div>");
+                let dateEl = $("<div>");
+                let iconEl = $("<div>");
+                let tempEl = $("<div>");
+                let humidityEl = $("<div>");
+
+                dateEl.text(trimmedDate);
+                tempEl.text(forecastObj.temp);
+                humidityEl.text(forecastObj.humidity);
+
+                dayDiv.append(dateEl, tempEl, humidityEl);
+                console.log(dayDiv);
+                $(".card-row").append(dayDiv);
+            }
+            
         }
-    })
+    });
+
 
 
 
@@ -176,7 +220,7 @@ function fiveDay(city) {
 
 
 //code for icons
-// let iconHtml = "http://openweathermap.org/img/wn";
-//     let imageName = (response.weather[0].icon);
-//     imageURL = iconHtml + imageName + ".png";
-//     let icon = 
+    // let iconHtml = "http://openweathermap.org/img/wn";
+    // let imageName = (response.weather[0].icon);
+    // imageURL = iconHtml + imageName + ".png";
+    // let icon = 
