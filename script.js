@@ -202,6 +202,7 @@ function fiveDay(city) {
                 humidityEl.text(forecastObj.humidity + "%");
                 iconEl.attr("src", iconURL);
                 
+                dayDiv.attr("class", "forecast-day");
 
                 dayDiv.append(dateEl, iconEl, tempEl, humidityEl);
                 $(".card-row").append(dayDiv);

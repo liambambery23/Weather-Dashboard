@@ -27,3 +27,10 @@ body {
 .card-row {
     display: flex;
 }
+
+.forecast-day {
+    background-color: royalblue;
+    margin: 10px;
+    padding: 5px;
+    text-align: center;
+}
