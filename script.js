@@ -110,7 +110,7 @@ $.ajax({
     // console.log(lon);
     // console.log(lat)
 
-    var uvURL="http://api.openweathermap.org/data/2.5/uvi?lat="+lat+"&lon="+lon+"&appid="+APIKey;
+    var uvURL="https://api.openweathermap.org/data/2.5/uvi?lat="+lat+"&lon="+lon+"&appid="+APIKey;
     console.log(uvURL)
 
     $.ajax({
@@ -143,7 +143,7 @@ $.ajax({
 function fiveDay(city) {
     
 
-    var fiveURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
+    var fiveURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
     console.log(fiveURL);
 
     let startingDate = moment().format("YYYY-MM-DD");
