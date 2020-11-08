@@ -20,7 +20,7 @@ if(lastCity!=null){
 
 // on click of search button, get the value of the search and save it 
 $("#searchBtn").on("click", function(event) {
-    event.preventDefault();
+    
     let city = $("#city-input").val().trim();
     if (city === "") {
         return; 
@@ -62,6 +62,7 @@ function saveSearch() {
 
     //onclick for usercity needs to be here due to scoping issues
     $(".usercity").on("click", function() {
+        $(".uv").text("");
         displayCurrentWeather($(this).text());
         fiveDay($(this).text());
     })
@@ -104,6 +105,12 @@ $.ajax({
     $(".humidity").text("Humidity: " + response.main.humidity);
     let tempF = (response.main.temp - 273.15) * 1.80 + 32;
     $(".temp").text("Temperature (F): " + tempF.toFixed(2));
+    
+    let iconHtml = "https://openweathermap.org/img/wn/";
+    let imageName = (response.weather[0].icon);
+    console.log(imageName);
+    let imageURL = iconHtml + imageName + "@2x.png";
+    $("#currentIcon").attr("src", imageURL);
     //uv: lon and lat
     let lon= response.coord.lon;
     let lat= response.coord.lat;
@@ -112,6 +119,7 @@ $.ajax({
 
     var uvURL="https://api.openweathermap.org/data/2.5/uvi?lat="+lat+"&lon="+lon+"&appid="+APIKey;
     console.log(uvURL)
+    
 
     $.ajax({
         url: uvURL,
@@ -166,10 +174,11 @@ function fiveDay(city) {
                 temp: forecast.list[i].main.temp,
                 humidity: forecast.list[i].main.humidity
             }
-           
+            let tempF = (forecastObj.temp - 273.15) * 1.80 + 32;
             let date = forecastObj.date;
             let trimmedDate = date.substr(0,10);
-            
+            let forecastIcon = "https://openweathermap.org/img/wn/";
+            let iconURL = forecastIcon + forecastObj.icon + "@2x.png";
             
             // go into forecast and get data for specific day
             // once we  get the data, create new html 
@@ -184,15 +193,17 @@ function fiveDay(city) {
                 counter++;
                 let dayDiv = $("<div>");
                 let dateEl = $("<div>");
-                let iconEl = $("<div>");
+                let iconEl = $("<img>");
                 let tempEl = $("<div>");
                 let humidityEl = $("<div>");
 
                 dateEl.text(trimmedDate);
-                tempEl.text(forecastObj.temp);
-                humidityEl.text(forecastObj.humidity);
+                tempEl.text(Math.floor(tempF) + " F");
+                humidityEl.text(forecastObj.humidity + "%");
+                iconEl.attr("src", iconURL);
+                
 
-                dayDiv.append(dateEl, tempEl, humidityEl);
+                dayDiv.append(dateEl, iconEl, tempEl, humidityEl);
                 $(".card-row").append(dayDiv);
             }
             
@@ -206,6 +217,10 @@ function fiveDay(city) {
 
 }
 
+// function apiFailure() {
+//     if ()
+// }
+
 //fiveDay("greenville")
 
 // WHEN I view current weather conditions for that city
@@ -218,8 +233,6 @@ function fiveDay(city) {
 // THEN I am again presented with current and future conditions for that city
 
 
-//code for icons
-    // let iconHtml = "http://openweathermap.org/img/wn";
-    // let imageName = (response.weather[0].icon);
-    // imageURL = iconHtml + imageName + ".png";
-    // let icon = 
+
+   
+   
