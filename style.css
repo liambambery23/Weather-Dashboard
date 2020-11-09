@@ -1,3 +1,15 @@
+.navbar {
+    background-color: #00C49A;
+}
+
+.navbar-brand {
+    color: #663F46;
+}
+
+.navbar-brand:hover {
+    color: #663F46;
+}
+
 body {
     background-color: #3C362A;
     color: #663F46;
