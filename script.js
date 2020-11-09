@@ -58,6 +58,8 @@ function saveSearch() {
         $("#history").prepend(history);
     }
 
+    
+
     //onclick for usercity needs to be here due to scoping issues
     $(".usercity").on("click", function() {
         $(".uv").text("");
@@ -208,3 +210,9 @@ function fiveDay(city) {
         }
     });
 }
+
+// function for clear button
+$("#clearBtn").on("click", function() {
+    localStorage.removeItem("searchHistory");
+    location.reload();
+})
