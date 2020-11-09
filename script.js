@@ -1,6 +1,4 @@
-// WHEN I search for a city
-// THEN I am presented with current and future conditions for that city 
-// and that city is added to the search history
+
 let searchHistory = [];
 let APIKey = "2291d60c5831d852804e78e42871c5c8";
 
@@ -98,7 +96,7 @@ $.ajax({
 
 .then(function(response) {
     console.log(currentWeatherURL);
-    // console.log(response);
+    
     $(".city").html("<h2>" + response.name + " (" + (currentDate) + ")" + "</h2>");
     let windMPH = (response.wind.speed) * 2.237;
     $(".wind").text("Wind Speed: " + windMPH.toFixed(1) + " MPH");
@@ -106,6 +104,7 @@ $.ajax({
     let tempF = (response.main.temp - 273.15) * 1.80 + 32;
     $(".temp").text("Temperature (F): " + tempF.toFixed(2));
     
+    //this grabs the proper weather icon
     let iconHtml = "https://openweathermap.org/img/wn/";
     let imageName = (response.weather[0].icon);
     console.log(imageName);
@@ -114,8 +113,7 @@ $.ajax({
     //uv: lon and lat
     let lon= response.coord.lon;
     let lat= response.coord.lat;
-    // console.log(lon);
-    // console.log(lat)
+ 
 
     var uvURL="https://api.openweathermap.org/data/2.5/uvi?lat="+lat+"&lon="+lon+"&appid="+APIKey;
     console.log(uvURL)
@@ -125,20 +123,25 @@ $.ajax({
         url: uvURL,
         method: "GET"
     }).then(function(uvObj){
+        $(".uv").text("UV Index: ");
         console.log(uvObj.value);
-        $(".uv").text(uvObj.value);
+        let uvIndex = $("<div>");
+        uvIndex.text(uvObj.value);
+        uvIndex.attr("class", "uv-text");
+        $(".uv").append(uvIndex);
+        //$(".uv").text("UV Index: " + uvObj.value);
         if (uvObj.value <= 2 ) {
-            $(".uv").attr("class", "favorable");
-            $(".uv").removeAttr("class", "moderate");
-            $(".uv").removeAttr("class", "high");
+            $(".uv-text").attr("class", "favorable");
+            $(".uv-text").removeAttr("class", "moderate");
+            $(".uv-text").removeAttr("class", "high");
         } else if (uvObj.value <= 5 ) {
-            $(".uv").attr("class", "moderate");
-            $(".uv").removeAttr("class", "favorable");
-            $(".uv").removeAttr("class", "high");
+            $(".uv-text").attr("class", "moderate");
+            $(".uv-text").removeAttr("class", "favorable");
+            $(".uv-text").removeAttr("class", "high");
         } else if (uvObj.value > 5 ) {
-            $(".uv").attr("class", "high");
-            $(".uv").removeAttr("class", "moderate");
-            $(".uv").removeAttr("class", "favorable");
+            $(".uv-text").attr("class", "high");
+            $(".uv-text").removeAttr("class", "moderate");
+            $(".uv-text").removeAttr("class", "favorable");
         }
     });
     
@@ -180,13 +183,7 @@ function fiveDay(city) {
             let forecastIcon = "https://openweathermap.org/img/wn/";
             let iconURL = forecastIcon + forecastObj.icon + "@2x.png";
             
-            // go into forecast and get data for specific day
-            // once we  get the data, create new html 
-            // put data into proper html element 
-            // display/append new html to the page
-
-            // potential issues: might get more data than we need 
-            // data we get is either going to be start or end of day 
+            
 
             if (trimmedDate === moment().add(counter, 'days').format("YYYY-MM-DD")) {
                 i = i+8;
@@ -210,30 +207,4 @@ function fiveDay(city) {
             
         }
     });
-
-
-
-
-
-
 }
-
-// function apiFailure() {
-//     if ()
-// }
-
-//fiveDay("greenville")
-
-// WHEN I view current weather conditions for that city
-// THEN I am presented with the city name, the date, an icon representation of weather conditions, the temperature, the humidity, the wind speed, and the UV index
-// WHEN I view the UV index
-// THEN I am presented with a color that indicates whether the conditions are favorable, moderate, or severe
-// WHEN I view future weather conditions for that city
-// THEN I am presented with a 5-day forecast that displays the date, an icon representation of weather conditions, the temperature, and the humidity
-// WHEN I click on a city in the search history
-// THEN I am again presented with current and future conditions for that city
-
-
-
-   
-   
