@@ -6,7 +6,7 @@ I created this application so that users could easily view weather data for citi
 
  
 ## Screenshots
-Include logo/demo screenshot etc.
+![weather dashboard application](assets/images/screenshot.png)
 
 ## Tech/framework used
 Bootstrap
